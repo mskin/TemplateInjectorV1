@@ -6,95 +6,111 @@
         xmlns:local="clr-namespace:TemplateInjectorV1"
         mc:Ignorable="d"
         Title="Template Injector — Load Families"
-        Height="600" Width="900"
+        Height="600" Width="980"
         WindowStartupLocation="CenterOwner">
 
     <DockPanel Margin="16">
 
-        <!-- Bottom: actions -->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-            <Button Content="Import Selected" Width="140" Click="btnImport_Click" Margin="0,0,8,0"/>
-            <Button Content="Close" Width="80" Click="btnClose_Click"/>
-        </StackPanel>
-
-        <!-- Top: options -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
-            <CheckBox x:Name="chkRecursive" Content="Search subfolders" IsChecked="True" Margin="0,0,16,0"/>
-            <CheckBox x:Name="chkOverwriteFamily" Content="Overwrite existing family" Margin="0,0,16,0"/>
-            <CheckBox x:Name="chkOverwriteParams" Content="Overwrite parameter values" Margin="0,0,16,0"/>
-            <CheckBox x:Name="chkSkipWorkshared" Content="Skip workshared families" IsChecked="True"/>
-        </StackPanel>
-
-        <!-- Top: path -->
+        <!-- Top: ROOT DIRECTORY (moved to top, always visible) -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
             <TextBlock Text="Root directory:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox x:Name="txtRoot" Width="640" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <Button x:Name="btnBrowse" Content="Browse..." Width="90" Click="btnBrowse_Click" Margin="0,0,8,0"/>
-            <Button x:Name="btnReload" Content="Reload" Width="80" Click="btnReload_Click"/>
+            <TextBox x:Name="txtRoot" Width="740" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <Button x:Name="btnBrowse" Content="Browse..." Width="100" Click="btnBrowse_Click" Margin="0,0,8,0"/>
+            <Button x:Name="btnReload" Content="Reload" Width="90" Click="btnReload_Click"/>
         </StackPanel>
 
-        <!-- Header: file count + GLOBAL Select All/None -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
-            <TextBlock Text="Found files:" VerticalAlignment="Center"/>
-            <TextBlock x:Name="lblCount" VerticalAlignment="Center" FontWeight="Bold" Margin="6,0,0,0"/>
-            <Button Content="Select All" Margin="12,0,0,0" Click="btnGlobalSelectAll_Click"/>
-            <Button Content="Select None" Margin="6,0,0,0" Click="btnGlobalSelectNone_Click"/>
-        </StackPanel>
+        <!-- TabControl containing Families (all previous content) and Views (placeholder) -->
+        <TabControl>
 
-        <!-- Tree -->
-        <TreeView x:Name="tvFolders"
-              VirtualizingStackPanel.IsVirtualizing="True"
-              VirtualizingStackPanel.VirtualizationMode="Recycling"
-              ScrollViewer.CanContentScroll="True">
-            <TreeView.Resources>
+            <!-- ===== Families tab ===== -->
+            <TabItem Header="Families">
+                <DockPanel>
 
-                <!-- Folder nodes: header + actions (actions only visible when expanded) -->
-                <HierarchicalDataTemplate DataType="{x:Type local:FolderNode}" ItemsSource="{Binding Nodes}">
-                    <StackPanel>
-                        <!-- Header row -->
-                        <DockPanel>
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                <TextBlock Text="📁" Margin="0,0,6,0"/>
-                                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                                <TextBlock Text="  ("/>
-                                <TextBlock Text="{Binding SelectedFamilyCount}"/>
-                                <TextBlock Text="/"/>
-                                <TextBlock Text="{Binding TotalFamilyCount}"/>
-                                <TextBlock Text=")"/>
-                            </StackPanel>
-                        </DockPanel>
-
-                        <!-- Actions row (per-folder), only when expanded -->
-                        <StackPanel Orientation="Horizontal" Margin="22,2,0,6">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Value="True"
-                                 Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-                            <Button Content="Select All" Tag="{Binding}" Click="btnSelectAll_Click"/>
-                            <Button Content="Select None" Margin="6,0,0,0" Tag="{Binding}" Click="btnSelectNone_Click"/>
-                        </StackPanel>
+                    <!-- Bottom: actions -->
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+                        <Button Content="Import Selected" Width="140" Click="btnImport_Click" Margin="0,0,8,0"/>
+                        <Button Content="Close" Width="80" Click="btnClose_Click"/>
                     </StackPanel>
-                </HierarchicalDataTemplate>
 
-                <!-- Family rows -->
-                <DataTemplate DataType="{x:Type local:FamilyListItem}">
-                    <DockPanel>
-                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="0,0,6,0"/>
-                        <TextBlock Text="{Binding FileName}"/>
-                        <TextBlock Text="  —  "/>
-                        <TextBlock Text="{Binding Directory}" Foreground="Gray"/>
-                    </DockPanel>
-                </DataTemplate>
+                    <!-- Top: Options (ONLY overwrite toggles; Subfolders/Skip-Workshared removed & defaulted ON) -->
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                        <CheckBox x:Name="chkOverwriteFamily" Content="Overwrite existing family" Margin="0,0,16,0"/>
+                        <CheckBox x:Name="chkOverwriteParams" Content="Overwrite parameter values"/>
+                    </StackPanel>
 
-            </TreeView.Resources>
-        </TreeView>
+                    <!-- Top: header with count + GLOBAL Select All/None -->
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="Found files:" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="lblCount" VerticalAlignment="Center" FontWeight="Bold" Margin="6,0,0,0"/>
+                        <Button Content="Select All" Margin="12,0,0,0" Click="btnGlobalSelectAll_Click"/>
+                        <Button Content="Select None" Margin="6,0,0,0" Click="btnGlobalSelectNone_Click"/>
+                    </StackPanel>
+
+                    <!-- Tree -->
+                    <TreeView x:Name="tvFolders"
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling"
+                    ScrollViewer.CanContentScroll="True">
+                        <TreeView.Resources>
+
+                            <!-- Folder nodes: header + actions (actions only visible when expanded) -->
+                            <HierarchicalDataTemplate DataType="{x:Type local:FolderNode}" ItemsSource="{Binding Nodes}">
+                                <StackPanel>
+                                    <!-- Header row -->
+                                    <DockPanel>
+                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                            <TextBlock Text="📁" Margin="0,0,6,0"/>
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                            <TextBlock Text="  ("/>
+                                            <TextBlock Text="{Binding SelectedFamilyCount}"/>
+                                            <TextBlock Text="/"/>
+                                            <TextBlock Text="{Binding TotalFamilyCount}"/>
+                                            <TextBlock Text=")"/>
+                                        </StackPanel>
+                                    </DockPanel>
+
+                                    <!-- Actions row (per-folder), only when expanded -->
+                                    <StackPanel Orientation="Horizontal" Margin="22,2,0,6">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Value="True"
+                                       Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <Button Content="Select All" Tag="{Binding}" Click="btnSelectAll_Click"/>
+                                        <Button Content="Select None" Margin="6,0,0,0" Tag="{Binding}" Click="btnSelectNone_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+
+                            <!-- Family rows -->
+                            <DataTemplate DataType="{x:Type local:FamilyListItem}">
+                                <DockPanel>
+                                    <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding FileName}"/>
+                                    <TextBlock Text="  —  "/>
+                                    <TextBlock Text="{Binding Directory}" Foreground="Gray"/>
+                                </DockPanel>
+                            </DataTemplate>
+
+                        </TreeView.Resources>
+                    </TreeView>
+                </DockPanel>
+            </TabItem>
+
+            <!-- ===== Views tab (placeholder for future) ===== -->
+            <TabItem Header="Views">
+                <Grid>
+                    <TextBlock Text="Views tools coming soon…" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
 
     </DockPanel>
 </Window>

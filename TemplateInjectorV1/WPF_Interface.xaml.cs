@@ -48,7 +48,7 @@ namespace TemplateInjectorV1
             string root = txtRoot.Text != null ? txtRoot.Text.Trim() : string.Empty;
             if (string.IsNullOrEmpty(root) || !Directory.Exists(root)) return;
 
-            bool recursive = chkRecursive.IsChecked == true;
+            bool recursive = true;
             var roots = FamilyLoader.BuildFamilyTreeRoots(root, recursive);
             foreach (var r in roots) _folders.Add(r);
 
@@ -90,7 +90,7 @@ namespace TemplateInjectorV1
 
             bool overwriteFamily = chkOverwriteFamily.IsChecked == true;
             bool overwriteParams = chkOverwriteParams.IsChecked == true;
-            bool skipWorkshared = chkSkipWorkshared.IsChecked == true;
+            bool skipWorkshared = true;
             var opts = new MyFamilyLoadOptions(overwriteFamily, overwriteParams);
 
             int success = 0, skipped = 0, failed = 0;
