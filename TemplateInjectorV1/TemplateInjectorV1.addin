@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command TemplateInjectorV1</Text>
+    <Description>Some description for TemplateInjectorV1</Description>
+    <Assembly>TemplateInjectorV1.dll</Assembly>
+    <FullClassName>TemplateInjectorV1.Command</FullClassName>
+    <ClientId>56c0d0ce-bec9-42d2-b286-71a6d1015a0f</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application TemplateInjectorV1</Name>
+    <Assembly>TemplateInjectorV1.dll</Assembly>
+    <FullClassName>TemplateInjectorV1.App</FullClassName>
+    <ClientId>40a57352-7de1-4811-a6f8-33fe070cc09d</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
